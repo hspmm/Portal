@@ -1,0 +1,107 @@
+<div mat-dialog-content>
+  <mat-toolbar class="mt-0" style="background-color:#0f5b9c; color: white;">
+    Add Customer
+  </mat-toolbar>
+  <br>
+  <form class="py-2" [formGroup]="AddCustomer">
+    <div class="row col-12 py-1 align-items-center ml-2">
+      <!-- <p class="col-2" >Name:</p> -->
+      <mat-form-field class="form-length col-md-8">
+        <input matInput placeholder="Name" id="NodeName" type="text" maxlength="30" formControlName="NodeName">
+        <mat-error *ngIf="!AddCustomer.hasError('required')">Enter a valid Name</mat-error>
+      </mat-form-field>
+      <div class="w-100"></div>
+
+      <!-- <p class="col-2">EmailID:</p> -->
+      <mat-form-field class="form-length col-md-8 py-2">
+        <input matInput placeholder="EmailID" id="EmailID" type="email" maxlength="40" formControlName="EmailID">
+        <mat-error *ngIf="!AddCustomer.hasError('required')">Enter a valid Email</mat-error>
+      </mat-form-field>
+      <div class="w-100"></div>
+
+      <!-- <p class="col-2">DomainName:</p> -->
+      <mat-form-field class="form-length col-md-8 py-2">
+        <input matInput placeholder="DomainName" id="DomainName" type="text" maxlength="30"
+          formControlName="DomainName">
+
+        <mat-error *ngIf="!AddCustomer.hasError('required')">Enter a valid Domain Name</mat-error>
+      </mat-form-field>
+      <div class="w-100"></div>
+      <p class="col-sm-3">Telephone No:</p>
+      <div class="w-100"></div>
+      <ngx-intl-tel-input class="row col-5 ml-1" [preferredCountries]="preferredCountries"
+        [enableAutoCountrySelect]="false" [enablePlaceholder]="true" [searchCountryFlag]="true"
+        [searchCountryField]="[SearchCountryField.Iso2, SearchCountryField.Name]" [selectFirstCountry]="false"
+        [selectedCountryISO]="CountryISO.India" [maxLength]="15" [tooltipField]="TooltipLabel.Name"
+        [phoneValidation]="true" [separateDialCode]="separateDialCode" name="Telephone" formControlName="Telephone">
+      </ngx-intl-tel-input>
+      
+      <div class="col-4 " style="color:red"
+        *ngIf="AddCustomer.get('Telephone').touched && AddCustomer.get('Telephone').invalid">
+        <div *ngIf="AddCustomer.get('Telephone').errors.minlength ">Enter valid Telephone No.</div>
+        <div *ngIf="AddCustomer.get('Telephone').errors.minlength">Enter valid Telephone No.</div>
+      </div>
+
+      <div class="w-100"></div>
+      <p class="col-sm-3">Root Certificate:</p>
+      <span class="col-5 ">
+        <input *ngIf="CertificateName" type="text" style="border: 0px;" name="CertificateName" id="CertificateName"
+          formControlName="CertificateName">
+
+        <p *ngIf="CertificateUploaded" id="CertificateUploaded" style="color:green"> Certificate Uploaded Successfully
+        </p>
+        <p *ngIf="CertificateError" id="CertificateError" style="color:red"> *Certificate is Not Valid
+        </p>
+          <p *ngIf="CertificateSizeError" id="CertificateSizeError" style="color:red"> *Certificate file is too large, Maximum file size is 50kb. 
+        </p>
+
+
+      </span>
+      
+      <div class="row col-12">
+        <div class="col-sm-3 col-md-3 col-lg-3">
+
+          <div class="form-group">
+            <label for="file" class="sr-only">File</label>
+            <div class="input-group">
+              <input type="text" name="filename" class="form-control" placeholder="No file selected" readonly>
+              <span class="input-group-btn">
+                <div class="btn btn-default  custom-file-uploader"
+                  style="color: black; background-color: whitesmoke; border-color: black;">
+                  <input type="file" name="file" id="RootCertificate" (change)="onCertificateSelected($event)"
+                  accept=".cer, .pem "              
+                    onchange="this.form.filename.value = this.files.length ? this.files[0].name : ''" />
+                  Upload Certificate File...
+                  <mat-spinner class="col-1" *ngIf="showSpinner" style="zoom:0.2;"></mat-spinner>
+
+                </div>
+
+              </span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="w-100"></div>
+    </div>
+  </form>
+</div>
+
+
+
+<div mat-dialog-actions align="end">
+
+  <div class="col-12">
+
+    <div class="error-popup " style="float: left;" *ngIf="popup?.show" id="popup"
+      [ngClass]="{'success-popup' : popup.status ==  'true' }">
+      <p>{{popup?.message}}</p>
+    </div>
+
+    <button class="btn  btn-sm" style="float: right;" type="button" mat-raised-button color="warn"
+      (click)="cancel()" id="Cancel-btn">Cancel</button>
+    <button class="btn  btn-sm" style="float: right; margin-right: 10px;" type="submit" id="add-to-hierarchy-btn"
+      mat-raised-button color="primary" (click)="save()" [disabled]="isDisable() ">Add</button>
+  </div>
+
+</div>

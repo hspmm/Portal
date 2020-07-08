@@ -1,0 +1,95 @@
+<div mat-dialog-content>
+
+
+    <mat-toolbar class="mt-0" style="background-color:#0f5b9c; color: white;">
+        Edit Product
+    </mat-toolbar>
+    <br>
+
+    <form class="py-2" [formGroup]="EditProduct">
+
+        <div class="row col-12 py-1 align-items-center ml-2">
+            <!-- <p class="col-2" >Name:</p> -->
+            <mat-form-field class="form-length col-md-8">
+                <input matInput placeholder="Product Name" id="ProductName" type="text" formControlName="ProductName"
+                    maxlength="40">
+                <mat-error *ngIf="!EditProduct.hasError('required')">Enter a valid Product Name</mat-error>
+            </mat-form-field>
+            <div class="w-100"></div>
+
+            <!-- <p class="col-2">EmailID:</p> -->
+            <mat-form-field class="form-length col-md-8 py-2">
+                <input matInput placeholder="Product Part number" id="ProductUid" type="text"
+                    formControlName="ProductUid" maxlength="40">
+                <mat-error *ngIf="!EditProduct.hasError('required')">Enter a valid UID</mat-error>
+            </mat-form-field>
+            <div class="w-100"></div>
+
+            <!-- <p class="col-2">DomainName:</p> -->
+            <mat-form-field class="form-length col-md-8 py-2">
+                <input matInput placeholder="Version" id="Version" type="text" formControlName="Version" maxlength="40">
+                <mat-error *ngIf="!EditProduct.hasError('required')">Enter a valid Version</mat-error>
+            </mat-form-field>
+            <div class="w-100"></div>
+
+            <!-- <p class="col-2">Telephone No:</p> -->
+            <mat-form-field class="form-length col-md-8 py-2">
+                <input matInput placeholder="Description" id="Description" type="text" formControlName="Description"
+                    maxlength="50">
+                <mat-error *ngIf="!EditProduct.hasError('required')">Enter valid Description.</mat-error>
+            </mat-form-field>
+            <div class="w-100"></div>
+
+
+
+
+
+            <button class="btn  btn-sm mb-1 ml-2" style="float: none;" type="button" mat-raised-button color='primary'
+            id="AddFeature-btn"   (click)=" addItem() ">Add Feature List</button>
+
+            <div class="w-100"></div>
+            <br>
+            <div formArrayName="featureList" class="row col-12"
+                *ngFor="let feature of EditProduct.get('featureList').controls; let i = index;">
+                <label style="padding-top: 25px;" class='col-1'>{{i+1}}</label>
+                <div [formGroupName]="i">
+                    <mat-form-field class="col-md-3">
+                        <input matInput formControlName="FeatureID" placeholder="Feature ID" id="FeatureID" type="text"
+                            maxlength="30" (keyup)="keyup($event.target.value)">
+                        <mat-error *ngIf="!EditProduct.hasError('required')">Enter valid FeatureID.</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="col-md-4">
+                        <input matInput formControlName="FeatureName" placeholder="Feature Name" id="FeatureName"
+                            type="text" maxlength="40">
+                        <mat-error *ngIf="!EditProduct.hasError('required')">Enter valid Feature Name.</mat-error>
+                    </mat-form-field>
+                    <mat-form-field class="col-md-4">
+                        <input matInput formControlName="Description" placeholder="Feature description" id="Description"
+                            type="text" maxlength="50">
+                        <mat-error *ngIf="!EditProduct.hasError('required')">Enter valid Description.</mat-error>
+                    </mat-form-field>
+                    <a class="delete ml-2" id="DeleteFeature-btn" title="Delete Feature" type="button" (click)="DeleteFeatureList(i)"
+                        data-toggle="tooltip" style="padding-top: 20px; color: #E34724;"><i
+                            class="material-icons ">&#xE872;</i></a>
+
+                    <mat-divider></mat-divider>
+
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+</div>
+<div mat-dialog-actions align="end">
+    <div class="col-12">
+        <div class="error-popup " style="float: left;" *ngIf="popup?.show" id="popup"
+            [ngClass]="{'success-popup' : popup.status ==  'true' }">
+            <p>{{popup?.message}}</p>
+        </div>
+        <button class="btn  btn-sm" style="float: right;" type="button" mat-raised-button color="warn" id="Cancel-btn"
+            (click)="cancel()">Cancel</button>
+        <button class="btn  btn-sm" style="float: right; margin-right: 10px;" type="submit" id="Update-btn"
+            mat-raised-button color="primary" (click)="updatePrduct()" [disabled]="isDisable() ">Update</button>
+    </div>
+</div>

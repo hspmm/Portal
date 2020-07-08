@@ -1,0 +1,47 @@
+{
+  "locatorForLoginPage": {
+    "name": "name",
+    "password": "password",
+    "errUNname": "error-UName",
+    "loginButton": "login-button"
+  },
+
+  "locatorForAddCustomer" : {
+    "addCustomer" : "add-customer-btn",
+    "name" : "name",
+    "emailID" : "email",
+    "domain" : "DomainName",
+    "telephone" : "Telephone",
+    "certificate" : "certificateFile",
+    "addButton" : "add-to-hierarchy-btn"
+  },
+
+  "locatorForSearch": {
+    "input" : "/html/body/app-root/app-landing/app-dashboard/div/div[1]/p/mat-form-field/div/div[1]/div[3]/input"
+  },
+
+
+  "locatorForEditButtonCustomer" :{
+    "button" : "//*[@id='edit-customer']"
+  },
+
+  "locatorToRefresh" : {
+    "button" : "refresh-btn"
+  },
+
+  "locatorToDownloadFile" :{
+    "button" : "generate-key"
+  },
+
+   "locatorToHideDetails" :{
+     "button" : "/html/body/app-root/app-landing/app-dashboard/div/div[2]/div[1]/div/button"
+   },
+
+   "locatorToSeeHierarchy":{
+     "button": "/html/body/app-root/app-landing/app-dashboard/div/div[2]/div[1]/div/mat-tree/mat-nested-tree-node/div"
+   },
+
+   "locatorForCancelCustomer":{
+     "button" : "cancel-btn"
+   }
+}

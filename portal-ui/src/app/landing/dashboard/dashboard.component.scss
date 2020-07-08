@@ -1,0 +1,252 @@
+.image-width{
+  width: 2.4rem;
+}
+
+.add-element-icon{
+  &:focus{
+      outline: none !important;
+  }
+}
+
+.hierarchy-width{
+width: 100vh !important;
+}
+
+.create-enterprise-box{
+  -webkit-box-shadow: 0px 0px 8px -1px rgba(0,0,0,0.66);
+  -moz-box-shadow: 0px 0px 8px -1px rgba(0,0,0,0.66);
+  box-shadow: 0px 0px 8px -1px rgba(0,0,0,0.66);
+}
+
+.hierarchy-tree-icons-content{
+  // display: inline-flex !important; 
+  display: none; 
+  position: relative !important;
+  margin: 0 0 0 auto !important;
+  padding-top: 3% !important;
+  padding-bottom: 2% !important;
+}
+
+.selected-node{
+  background: var(--ec-color);
+  color: white;
+  .hierarchy-tree-icons-content{
+    display: inline-flex;
+  }
+}
+
+
+.tree-node{
+  .heirarchy-icons{
+    color: white;
+  }
+  &:hover{
+    background: #cecece;
+    .heirarchy-icons{
+      color: black;
+    }
+  }
+}
+.tree-font{
+color: #42526e;
+&:hover{
+  cursor: pointer;
+}
+}
+
+.slidable{
+width: 344px;
+visibility: visible;
+top: 80px;
+position: absolute;
+bottom: 0;
+}
+
+.plugin-icons{
+width: 3.3rem;
+border: 1px solid lightgrey;
+border-radius: 50%;
+padding: 5px;
+transition: all .4s ease;
+box-shadow: 0 0 0 0 rgba(0,0,0,.2), 0 2px 3px 0 rgba(0,0,0,.19);
+&:hover{
+  cursor: pointer;
+  -webkit-box-shadow: 0px 0px 10px -1px rgba(0,0,0,0.75);
+  -moz-box-shadow: 0px 0px 10px -1px rgba(0,0,0,0.75);
+  box-shadow: 0px 0px 10px -1px rgba(0,0,0,0.75);
+}
+}
+
+.mt-2, .my-2 {
+  margin-top: .5rem!important;
+}
+
+.menu-spacer {
+/* This fills the remaining space, by using flexbox.
+   Every toolbar row uses a flexbox row layout. */
+flex: 1 1 auto;
+}
+
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.example-container > * {
+  width: 100%;
+}
+
+.example-container form {
+  margin-bottom: 20px;
+}
+
+.example-container form > * {
+  margin: 5px 0;
+}
+
+.tree-collapse{
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
+
+.setTreePanWidth{
+  /* max-width: 43px;
+  overflow: hidden !important; */
+  max-width: 4.1%;
+  overflow: hidden !important;
+  /* max-width: 43px; */
+  flex: auto;
+  border-right: 2px solid lightgray ;
+}
+
+.setrightPanWidth{
+  // margin-top: 1rem;
+  height: 84vh;
+  padding: 0;
+  max-width: 95.8% !important;
+  flex: auto;
+}
+
+::ng-deep{
+  .search-box{
+    .mat-form-field{
+      line-height: 1;
+    }
+
+    .mat-form-field-wrapper{
+      padding: 0 !important;
+    }
+
+    .mat-form-field-infix{
+      /* padding: .5em 0; */
+      border-top: 0.7em solid transparent;
+      padding-bottom: 0.9em;
+      padding-top: 0.7em;
+    }
+  } 
+
+}
+
+.searched-list{
+  padding: .2em 1em;
+  &:hover{
+    cursor: pointer;
+    background: var(--ec-color);
+    color: white;
+  }
+}
+
+.app-utilities-bar{
+  //position: fixed;
+  // position: sticky;
+  // position: -webkit-sticky;
+  // z-index: 1000;
+  // top: 81px;
+  width: 100%;
+  border-bottom: 2px solid lightgrey;
+  background: white;
+  // min-height: 55px;    
+}
+
+
+.app-main-content{
+  overflow-x: hidden;
+  // z-index: 1000;
+  //top: 81px;
+  width: 100%;
+  overflow: hidden;
+  // position: fixed;
+}
+
+
+.list-text-wrap{
+list-style: none !important;
+white-space: nowrap;
+/* width: 50px; */
+overflow: hidden;
+text-overflow: ellipsis;
+}
+
+
+.example-tree-invisible {
+  display: none;
+}
+
+.example-tree ul,
+.example-tree li {
+  margin-top: 0;
+  margin-bottom: 0;
+  list-style-type: none;
+}
+.selected-node{
+  background: var(--ec-color);
+  color: white;
+  li{
+    color: white !important;
+  }
+
+  &:hover{
+    background: var(--ec-color) !important;
+    color: white;
+    .heirarchy-icons{
+      color: white !important;
+    }
+  }
+}
+
+
+@media (min-width: 768px) {
+  .right-split-area{
+    min-width: 15% !important;
+    max-width: 85% !important;
+  }
+  .left-split-area{
+    min-width: 15% !important;
+    max-width: 85% !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .right-split-area{
+    min-height: 18% !important;
+    max-height: 82% !important;
+  }
+  .left-split-area{
+    min-height: 18% !important;
+    max-height: 82% !important;
+  }
+}
+
+
+
+
+.card-form{
+  margin: 2em auto;
+  padding: 1em 2em 1em 2em;
+  background: #fafafa;
+  border-radius: 10px;
+  border: 1px solid #ebebeb;
+  box-shadow: rgba(0,0,0,0.14902) 0px 1px 1px 0px,rgba(0,0,0,0.09804) 0px 1px 2px 0px;
+}

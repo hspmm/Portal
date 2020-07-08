@@ -1,0 +1,73 @@
+<div class="container-fluid" style="background-color: #036bc0; height:auto;">
+  <div class="row header-items m-0">
+    <div class="col-xl-2 col-lg-2 col-md-2 col-12 ">
+      <a routerLink="">
+        <img class="brand-logo" src="assets/logo-white-icu-medical.svg"/>
+      </a>
+    </div>
+    <div class="col-xl-2 col-lg-2 col-md-2 col-6">
+      <div class="header-warn" style="display: flex;margin: 10px 0px;">
+        <h1 class="text-white header-title-font">
+          ICU Medical Portal
+          <span style="font-size: 10px;"> V 0.1 &nbsp;</span>
+        </h1>
+      </div>
+    </div>
+    <div class="col-xl-2 col-lg-2 col-md-2 col-6 bg-danger text-white text-center rounded-pill" style="padding: 3px 10px;">
+      Not For Production Use
+    </div>
+
+    <div class="col-xl-6 col-lg-6 col-md-6 col-12 ">
+      <div class="row">
+        <nav class="d-sm-flex d-md-none col-6" style="padding: 0px 5px;">
+          <input type="checkbox" href="#" class="menu-open" name="menu-open" id="menu-open" />
+          <label class="menu-open-button" for="menu-open">
+            <span class="hamburger hamburger-1"></span>
+            <span class="hamburger hamburger-2"></span>
+            <span class="hamburger hamburger-3"></span>
+          </label>
+
+          <button class="menu-item" mat-icon-button [routerLink]="pages.link" [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active-page"  *ngFor="let pages of headerContent">
+            <mat-icon>{{pages.icon}}</mat-icon>
+          </button>
+        </nav>
+      
+
+    
+        <div class="header-profile-icon text-white header-user col-xl-12 col-lg-12 col-md-12 col-6 d-flex justify-content-end" *ngIf="currentUser">
+          <button class="d-none d-sm-none d-md-flex justify-content-center" mat-icon-button [routerLink]="pages.link" *ngFor="let pages of headerContent"  >
+            <mat-icon>{{ pages.icon }}</mat-icon>
+          </button>
+
+          <button mat-icon-button [matMenuTriggerFor]="menu" class="user-toggle-icon text-truncate" id="userButton">
+            <mat-icon>account_circle</mat-icon>
+            <span style="padding-left: 5px; margin-right: 10px;">{{ currentUser.userName }} </span>
+           <mat-icon class="header-username-dropdown">arrow_drop_down</mat-icon>
+          </button>
+
+          <mat-menu #menu="matMenu">
+            <p class="menu-user-text p-2 m-0 text-center" style="color: darkorange" id="UserName">
+              {{ currentUser.userName }}
+            </p>
+            <ng-container *ngFor="let list of headerDropDownContent">
+              <button id={{list.id}} mat-menu-item [routerLinkActiveOptions]="{exact: true}" routerLinkActive="active-dropdown-page" [routerLink]="list.link" *ngIf="list.hasAccess">
+                <mat-icon>{{ list.icon }}</mat-icon>
+                <span>{{ list.name }}</span>
+              </button>
+            </ng-container>
+
+            <button mat-menu-item (click)="logout()" id="logoutButton">
+              <mat-icon>exit_to_app</mat-icon>
+              <span>Logout</span>
+            </button>
+          </mat-menu>
+        </div>
+      </div>
+    </div>
+
+    <!-- row ends -->
+  </div>
+  <!-- container ends -->
+</div>
+
+<router-outlet></router-outlet>

@@ -1,0 +1,265 @@
+<ng-container *ngIf="showSpinner; else showDashboard">
+  <div class="loader-">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+</ng-container>
+
+<ng-template #showDashboard>
+  <div class="app-dashboard-container" style="background:lightgray;">
+    <ng-container>
+      <div class="row m-0 align-items-center app-utilities-bar">
+        <button class="app-button-color mt-3 mb-3 ml-3 text-truncate overflow-hidden"
+        id="AddCustomer" style="outline:none;border-radius:19px" mat-raised-button (click)="addCustomerProfile()"   *ngIf="userPrivileges?.addAndEditCustomer">
+          Add Customer
+        </button>
+        <button [disabled]="showButton" class="app-button-color mt-3 mb-3 ml-3 text-truncate overflow-hidden"
+        id="EditCustomer" style="outline:none;border-radius:19px" mat-raised-button (click)="EditCustomerProfile()"*ngIf="userPrivileges?.addAndEditCustomer">
+          Edit Customer
+        </button>
+        <button [disabled]="showButton" class="app-button-color mt-3 mb-3 ml-3 text-truncate overflow-hidden"
+        id="GenerateKey" style="outline:none;border-radius:19px" mat-raised-button (click)="saveAsJSON()">
+          Generate Key
+        </button>
+        <!-- </a> -->
+        <button class="app-button-color mt-3 mb-3 ml-3 text-truncate overflow-hidden"
+        id="Refreshhierarchy" style="outline:none;border-radius:19px" mat-raised-button (click)="RefreshTree()">
+          Refresh hierarchy
+        </button>
+        <span class="menu-spacer"></span>
+        <div  id="popup" class= "success-popup"*ngIf="popup?.show" [ngClass]="{'error-popup-bg' : popup.status === false}">
+          <mat-icon class="toaster-popup-close" (click)="popup.show = false">close</mat-icon>
+          <p>{{popup?.message}}</p>
+        </div>
+
+        <span class="menu-spacer"></span>
+        <p *ngIf="detectedPlugins && (detectedPlugins.length < 1)" id="NoDefaultPluginsFound" style="color: red;"><b>No default plugins found</b>
+        </p>
+        <div *ngFor="let detectedPlugin of detectedPlugins | pluginInstance" id="pluginDetected">
+
+          <img *ngIf="detectedPlugin.Name == 'ISAS' ||  detectedPlugin.Name == 'Notification Manager' ||detectedPlugin.Name == 'Device Manager' "
+          id="DetectedPlugins"  matTooltip="{{detectedPlugin.Name}}" [src]="renderPluginUrl(detectedPlugin.IconUrl)"
+            onError="this.src='assets/icons/default-icon.png'" class="mr-2 plugin-icons"
+            (click)="selectedSingleInstanceApplication(detectedPlugin)">
+
+          <img *ngIf="!showButton &&  detectedPlugin.Name == 'License Manager'"id="LicenseManager" matTooltip="{{detectedPlugin.Name}}"
+            [src]="renderPluginUrl(detectedPlugin.IconUrl)" onError="this.src='assets/icons/default-icon.png'"
+            class="mr-2 plugin-icons" (click)="selectedLicensePluginApplication(detectedPlugin)">
+
+
+          <img *ngIf="showButton && detectedPlugin.Name == 'License Manager'" id="LicenseManagerDisabled"
+            matTooltip="Select Customer To Enable  {{detectedPlugin.Name}}" style="opacity:0.5"
+            [src]="renderPluginUrl(detectedPlugin.IconUrl)" onError="this.src='assets/icons/default-icon.png'"
+            class="mr-2 plugin-icons">
+        </div>
+        <!-- <mat-menu #menu="matMenu">
+          <div *ngIf="showDetectedPluginData">
+            <p class="p-2 m-0 text-center" style="border-bottom: 1px solid lightgrey;color:indianred">
+              {{showDetectedPluginData.name}}</p>
+            <button mat-menu-item *ngFor="let detectedPlugin of showDetectedPluginData.serverUrl">
+              <span>{{detectedPlugin.name}}</span>
+            </button>
+          </div>
+        </mat-menu> -->
+
+      </div>
+
+
+
+      <div class="row m-0 app-main-content" style="background: white;height: 84.5vh;">
+
+        <as-split direction="{{splitDirection}}">
+          <as-split-area size="25" class="left-split-area">
+            <div class="row m-0 justify-content-center align-items-center">
+
+              <div class="col-xl-12 col-lg-12 col-12 m-0 ">
+                <mat-form-field appearance="outline" class="w-100 pb-0 search-box mt-2">
+                  <mat-label>Search</mat-label>
+                  <input matInput placeholder="Search in Hierarchy" [(ngModel)]="searchText"
+                  id="Search" (input)="searchInHierarchy($event.target.value)">
+                  <mat-icon matSuffix>search</mat-icon>
+                </mat-form-field>
+              </div>
+            </div>
+            <hr class="mt-2 " *ngIf="!showSearchList">
+
+            <mat-tree [dataSource]="dataSource" #tree [treeControl]="treeControl" *ngIf=" showHierarchyTree && userPrivileges?.canViewCustomer"  >
+
+              <mat-tree-node *matTreeNodeDef="let node" matTreeNodeToggle
+                [ngClass]="{'selected-node': node.Uid == selectedNode['Uid'] && node.CustomerID ==selectedNode['CustomerID']}"
+                class="tree-node">
+                
+
+                <div>
+
+                  <li class="mat-tree-node tree-font" matTooltip="{{node.NodeName}}" (click)="userSelectedNode(node)">
+                    <button mat-icon-button disabled></button>
+                    <img *ngIf="node.ParentID == null" [src]="'assets/icons/IconEnterprise.jpg'"
+                      class="mr-2 image-width">
+                    <img *ngIf="node.ParentID != null" [src]="node.IconUrl"
+                      onError="this.src='assets/icons/default-icon.png'" class="mr-2 image-width">
+
+                    {{node.NodeName}}
+
+                  </li>
+                </div>
+              </mat-tree-node>
+
+              <mat-nested-tree-node *matTreeNodeDef="let node; when: hasChild">
+
+                <div class="mat-tree-node"
+                  [ngClass]="{'selected-node': node.Uid == selectedNode['Uid'] && node.CustomerID ==selectedNode['CustomerID']}"
+                  class="tree-node">
+
+                  <li matTooltip="{{node.NodeName}}" matTooltipPosition="after" class="rounded tree-font list-text-wrap"
+                    (click)="userSelectedNode(node)">
+                    <button mat-icon-button matTreeNodeToggle [attr.aria-label]="'toggle ' + node.NodeName"
+                      (click)="userSelectedNode(node)">
+                      <mat-icon class="mat-icon-rtl-mirror">
+                        {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                      </mat-icon>
+                    </button>
+                    <img *ngIf="node.ParentID == null" [src]="'assets/icons/IconEnterprise.jpg'"
+                      class="mr-2 image-width">
+                    <img *ngIf="node.ParentID != null" [src]="node.IconUrl"
+                      onError="this.src='assets/icons/default-icon.png'" class="mr-2 image-width">
+                    {{node.NodeName}}
+                  </li>
+                </div>
+                <ul [class.example-tree-invisible]="!treeControl.isExpanded(node)">
+                  <ng-container matTreeNodeOutlet></ng-container>
+                </ul>
+              </mat-nested-tree-node>
+            </mat-tree>
+
+
+
+            <div *ngIf="showSearchList">
+              <p *ngFor="let list of searchedHierarchyList" (click)="selectedTreeNode(list)" class="searched-list">
+                <img [src]="'assets/icons/IconEnterprise.jpg'" class="mr-2" style="width:2.5rem">
+                {{list.NodeName}}
+
+              </p>
+              <p class="ml-3" *ngIf="SearchNotFound" style="color:red">Record Not Found! </p>
+            </div>
+          </as-split-area>
+
+
+          <as-split-area size="75" class="right-split-area">
+            <div class="col-11 justify-content-center card-form">
+              <form class="py-2" [formGroup]="NodeDetailsForm" *ngIf="isTree">
+                <div class="col-10 offset-1 py-1 px-3 align-items-center">
+
+                  <p class=" py-2" *ngIf="isCustomerName" style="margin:0">Customer</p>
+                  <input class="form-control  mb-2" *ngIf="isCustomerName" maxlength="128" type="text" id="Customer"
+                     formControlName="NodeName" required disabled>
+
+
+                  <p class=" py-2" *ngIf="isNodeName" style="margin:0">Name</p>
+                  <input class="form-control  mb-2" *ngIf="isNodeName" maxlength="128" type="text" id="Name" name="name"
+                    formControlName="NodeName" required disabled>
+
+
+                  <div class="w-100"></div>
+
+
+
+                  <p class=" py-2" style="margin:0">Type </p>
+                  <input class="form-control  mb-2" maxlength="128" type="text" id="Type" name="type"
+                    formControlName="Typeof" required disabled>
+                  <div class="w-100"></div>
+                </div>
+              </form>
+
+              <!--  -->
+              <form class="py-2" [formGroup]="FacilityForm" *ngIf="isFacility">
+                <div class="row col-10 offset-1 py-1 px-3 align-items-center">
+
+                  <p class="col-3 py-2" style="margin:0">Address Line1</p>
+                  <input class="form-control col-3 mb-2" type="text" id="AddressLine1" name="AddressLine1"
+                    formControlName="AddressLine1" disabled>
+
+
+                  <p class="col-2 py-2" style="margin:0">City</p>
+                  <input class="form-control col-3 mb-2" type="text" id="City" name="City" formControlName="City"
+                    disabled>
+                  <div class="w-100"></div>
+
+                  <p class="col-3 py-2" style="margin:0">Address Line2</p>
+                  <input class="form-control col-3 mb-2" type="text" id="AddressLine2" name="AddressLine2"
+                    formControlName="AddressLine2" disabled>
+
+
+                  <p class="col-2 py-2" style="margin:0">State/Province</p>
+                  <input class="form-control col-3 mb-2" type="text" id="State" name="State" formControlName="State"
+                    disabled>
+                  <div class="w-100"></div>
+
+                  <p class="col-3 py-2" style="margin:0">Address Line3</p>
+                  <input class="form-control col-3 mb-2" type="text" id="AddressLine3" name="AddressLine3"
+                    formControlName="AddressLine3" disabled>
+
+
+                  <p class="col-2 py-2" style="margin:0">Postal Code/Zip</p>
+                  <input class="form-control col-3 mb-2" type="text" id="PostalCode" name="PostalCode"
+                    formControlName="PostalCode" disabled>
+                  <div class="w-100"></div>
+
+                  <p class="col-3 py-2" style="margin:0">Country</p>
+                  <input class="form-control col-3 mb-2" type="text" id="Country" name="Country"
+                    formControlName="Country" disabled>
+                  <div class="w-100"></div>
+                  <br>
+                  <hr color="lightgrey" align="left" width="120%" size="6">
+
+                  <p class="col-3 py-2" style="margin:0">IP Range</p>
+                  <input class="form-control col-3 mb-2" type="text" id="IPRange" name="IPRange"
+                    formControlName="IPRange" disabled>
+
+
+                  <p class="col-2 py-2" style="margin:0">Facility Status</p>
+
+                  <input class="form-control col-3 mb-2" type="text" formControlName="Status" disabled>
+
+
+
+                  <p class="col-12 py-2">
+                    <font size="2"> IP Range CIDR Notation format must be IPAddress/Netmask(e.g. 192.168.100.0/24)
+                    </font>
+                  </p>
+                  <div class="w-100"></div>
+
+                  <hr color="lightgrey" align="left" width="120%" size="6">
+
+                  <p class="col-3 py-2" style="margin:0">Contact</p>
+                  <input class="form-control col-3 mb-2" type="text" id="Contact" name="Contact"
+                    formControlName="Contact" disabled>
+
+                  <p class="col-2 py-2" style="margin:0">Email</p>
+                  <input class="form-control col-3 mb-2" type="text" id="Email" name="Email" formControlName="Email"
+                    disabled>
+                  <div class="w-100"></div>
+
+                  <p class="col-3 py-2" style="margin:0">Department</p>
+                  <input class="form-control col-3 mb-2" type="text" id="Department" name="Department"
+                    formControlName="Department" disabled>
+
+                  <p class="col-2 py-2" style="margin:0">Phone</p>
+                  <input class="form-control col-3 mb-2" type="text" id="Phone" name="Phone" formControlName="Phone"
+                    disabled>
+                  <div class="w-100"></div>
+                  <br>
+                </div>
+              </form>
+
+            </div>
+          </as-split-area>
+        </as-split>
+      </div>
+
+    </ng-container>
+
+  </div>
+</ng-template>

@@ -1,0 +1,15 @@
+
+  <div class="custom-dialog ">
+      
+    <mat-icon id="close-icon" (click)="closeDialog()"  id="closeDialogButton" style="align-items: right">close</mat-icon>
+	<h2 mat-dialog-title class="text-center" style="color: red;">!!Warning!!</h2>
+	<mat-dialog-content>
+		<p>
+			{{Message}}
+		</p>
+	</mat-dialog-content>
+    <mat-dialog-actions align="center">
+		<button mat-button mat-raised-button  id="no-button" [mat-dialog-close]="false">No</button>
+		<button mat-raised-button color="warn"  id="yes-button" [mat-dialog-close]="true">Yes</button>
+	</mat-dialog-actions>
+</div>
